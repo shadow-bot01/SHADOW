@@ -1,2 +1,1 @@
-# SHADOW
-𝐵𝛩𝑇-𝑺𝐻𝐴𝐷𝛩𝑊 [ ⏳ ] Uptime: 00d ️00h 00m 00s
+☘️Welcome to the new Shadow bot. You will find all the commands and files. Of course there are encrypted commands. I hope you like the bot....
