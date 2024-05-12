@@ -19,7 +19,7 @@ let handler = async (m, {conn, usedPrefix, usedPrefix: _p, __dirname, text, isPr
     let uptime = clockString(_uptime)
 let who = m.quoted ? m.quoted.sender : m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
 if (!(who in global.db.data.users)) throw `✳️ The user is not found in my database`
-let videoUrl = 'https://telegra.ph/file/21e5f6282e661c645949d.mp4';
+let videoUrl = 'https://telegra.ph/file/4b0037642a1ec84b39596.mp4';
   let vn = './media/menu.mp3';
   const user = global.db.data.users[m.sender];
   const {money, joincount} = global.db.data.users[m.sender];
@@ -35,31 +35,37 @@ let more = String.fromCharCode(8206)
 let readMore = more.repeat(900) 
   const taguser = '@' +  m.sender.split('@s.whatsapp.net')[0];
 let str = ` 
-*∞┇━━━ •『☘️』• ━━━┇∞*
+*∞┇━━━ •『📋』• ━━━┇∞*
 
 *◞❐ أهـلا وسـهـلاً بـك يـا ${taguser}*
 
+*ملحوظة المطور متبري من ذنوب الاغاني او اي ذنب لي اي امر ذنوبك انت مسؤال عنها*
+
 *｢⧉ اسـم البـوت*
-*↚ 〖𝑺𝐻𝐴𝐷𝛩𝑊〗*
+
+*↚ 〖𝐴𝑌𝐴𝑁𝛩𝐾𝛩𝑈𝐽𝐼 𝐵𝛩𝑇〗*
 
 *｢⧉ اســـم الـمـنـصـه*
+
 *↚〖HEROKU〗*
 
 *｢⧉ الــمـطـور*
-*↚〖乡kặkặśĥí乡〗*
+
+*↚〖𝑀𝐼𝐾𝐸𝑌〗*
 
 *｢⧉ وقـت الـتـشـغـيـل ${uptime}*
 
 *｢⧉ الـتـوقـيـت ${date}*
 
-*∞┇━━━ •『☘️』• ━━━┇∞*
+*∞┇━━━ •『📋』• ━━━┇∞*
 
 *｢⧉ لـطلـب قائمه الاوامر اكتب*
 *↚〖.المهام〗*
 
-*｢⧉ ملاحظه عليك كتابه نقطه قبل كل امر مثل ↚〖.زواج〗*
+*｢⧉ ملاحظه عليك كتابه نقطه قبل كل امر مثل ↚〖.عين*
 ‬`.trim();
-await conn.sendMessage(m.chat, { react: { text: '☠️', key: m.key } })
+    
+await conn.sendMessage(m.chat, { react: { text: '🪽', key: m.key } })
 
 conn.sendMessage(m.chat, {
         video: { url: videoUrl }, caption: str,
