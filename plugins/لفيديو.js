@@ -1,78 +1,25 @@
-import fetch from 'node-fetch';
-import {
-    FormData,
-    Blob
-} from 'formdata-node';
-import {
-    JSDOM
-} from 'jsdom';
-/**
- * 
- * @param {Buffer|String} source 
- */
-async function webp2mp4(source) {
-    let form = new FormData()
-    let isUrl = typeof source === 'string' && /https?:\/\//.test(source)
-    const blob = !isUrl && new Blob([source.toArrayBuffer()])
-    form.append('new-image-url', isUrl ? blob : '')
-    form.append('new-image', isUrl ? '' : blob, 'image.webp')
-    let res = await fetch('https://ezgif.com/webp-to-mp4', {
-        method: 'POST',
-        body: form
-    })
-    let html = await res.text()
-    let {
-        document
-    } = new JSDOM(html).window
-    let form2 = new FormData()
-    let obj = {}
-    for (let input of document.querySelectorAll('form input[name]')) {
-        obj[input.name] = input.value
-        form2.append(input.name, input.value)
-    }
-    let res2 = await fetch('https://ezgif.com/webp-to-mp4/' + obj.file, {
-        method: 'POST',
-        body: form2
-    })
-    let html2 = await res2.text()
-    let {
-        document: document2
-    } = new JSDOM(html2).window
-    return new URL(document2.querySelector('div#output > p.outfile > video > source').src, res2.url).toString()
+import { webp2mp4 } from '../lib/webp2mp4.js'
+import { ffmpeg } from '../lib/converter.js'
+let handler = async (m, { conn, usedPrefix, command }) => {
+if (!m.quoted) throw `*اعمل ريبلاي للاستيكر ال عاوز تحوله لفديو يحب ${usedPrefix + command}*`
+let mime = m.quoted.mimetype || ''
+if (!/webp/.test(mime)) throw `*اعمل ريبلاي للاستيكر ال عاوز تحوله لفديو يحب ${usedPrefix + command}*`
+let media = await m.quoted.download()
+let out = Buffer.alloc(0)
+if (/webp/.test(mime)) {
+out = await webp2mp4(media)
+} else if (/audio/.test(mime)) {
+out = await ffmpeg(media, [
+'-filter_complex', 'color',
+'-pix_fmt', 'yuv420p',
+'-crf', '51',
+'-c:a', 'copy',
+'-shortest'
+], 'mp3', 'mp4')
 }
-
-async function webp2png(source) {
-    let form = new FormData()
-    let isUrl = typeof source === 'string' && /https?:\/\//.test(source)
-    const blob = !isUrl && new Blob([source.toArrayBuffer()])
-    form.append('new-image-url', isUrl ? blob : '')
-    form.append('new-image', isUrl ? '' : blob, 'image.webp')
-    let res = await fetch('https://ezgif.com/webp-to-png', {
-        method: 'POST',
-        body: form
-    })
-    let html = await res.text()
-    let {
-        document
-    } = new JSDOM(html).window
-    let form2 = new FormData()
-    let obj = {}
-    for (let input of document.querySelectorAll('form input[name]')) {
-        obj[input.name] = input.value
-        form2.append(input.name, input.value)
-    }
-    let res2 = await fetch('https://ezgif.com/webp-to-png/' + obj.file, {
-        method: 'POST',
-        body: form2
-    })
-    let html2 = await res2.text()
-    let {
-        document: document2
-    } = new JSDOM(html2).window
-    return new URL(document2.querySelector('div#output > p.outfile > img').src, res2.url).toString()
+await conn.sendFile(m.chat, out, 'error.mp4', '*تم*', m, 0, { thumbnail: out })
 }
-
-export {
-    webp2mp4,
-    webp2png
-}
+handler.help = ['tovideo']
+handler.tags = ['sticker']
+handler.command = ['لفديو', 'tomp4', 'لمقطع', 'لفيديو']
+export default handler
